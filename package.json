@@ -1,0 +1,14 @@
+{
+  "name": "simple-rpg",
+  "version": "1.0.0",
+  "description": "Character Creator",
+  "main": "bot.js",
+  "author": "Austin Whitlatch",
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "mongodb": "^2.2.33",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+  }
+}
