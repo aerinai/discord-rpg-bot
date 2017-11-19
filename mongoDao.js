@@ -39,6 +39,7 @@ var MongoDao =  {
       db.collection(CHARACTER_TABLE).find(query).toArray(function(err, result) {
       if(err) throw err;
         console.log(result);
+        console.log("RESULT: " + result.length);
         outputFn(channelId,makePretty(result[0]));
         db.close();
       });
@@ -63,21 +64,23 @@ var MongoDao =  {
           db.close();
         });
       });
-    },
-    update: function(args, user, userId, channelId, outputFn) {
-      var arg0 = [args[1]];
-      var arg1 = [args[2]];
-      console.log("arg0: " + arg0);
-      console.log("arg1: " + arg1);
-      MongoClient.connect(url, function(err, db) {
+  },
+  update: function(args, user, userId, channelId, outputFn) {
+    var actualUser = args[0];
+    var keyName = args[1];
+    var value = args[2];
+    console.log("keyName: " + keyName);
+    console.log("value: " + value);
+    console.log("user: " + user);
+    MongoClient.connect(url, function(err, db) {
+      if(err) throw err;
+      db.collection(CHARACTER_TABLE).update({discord_name:actualUser}, {$set: { [keyName]: [value]}}, function(err, doc) {
         if(err) throw err;
-        db.collection(CHARACTER_TABLE).update({discord_name:user}, {$set: { [arg0]: arg1}}, function(err, doc) {
-          if(err) throw err;
-          logger.info("Updated: " + JSON.stringify(doc));
-          outputFn(channelId, doc);
-        });
+        logger.info("Updated: " + JSON.stringify(doc));
+        outputFn(channelId, doc);
       });
-    }
+    });
+  }
 }
 module.exports = MongoDao;
 
@@ -113,5 +116,5 @@ function getNumber(value) {
 
 function rollD20(modifier) {
   var value = Math.floor((Math.random() * 20) + 1)
-  return "(" + value + ")+" + modifier + " = " + (value + modifier)
+  return "(" + value + ")+" + modifier + " = " + (value + parseInt(modifier))
 }
