@@ -80,7 +80,21 @@ var MongoDao =  {
         outputFn(channelId, doc);
       });
     });
-  }
+  },
+  remove: function(args, user, userId, channelId, outputFn) {
+      var actualUser = args[0];
+      var keyName = args[1];
+      console.log("user: " + user);
+      console.log("keyName: " + keyName);
+      MongoClient.connect(url, function(err, db) {
+        if(err) throw err;
+        db.collection(CHARACTER_TABLE).update({discord_name:actualUser}, {$unset: { [keyName]: ""}}, function(err, doc) {
+          if(err) throw err;
+          logger.info("Removed: " + JSON.stringify(doc));
+          outputFn(channelId, doc);
+        });
+      });
+    }
 }
 module.exports = MongoDao;
 

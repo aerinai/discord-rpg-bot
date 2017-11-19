@@ -49,6 +49,9 @@ controller.on('message', function (user, userId, channelId, message, evt) {
         case 'update':
           MongoDao.update(args, user, userId, channelId, output);
           break;
+        case 'remove':
+          MongoDao.remove(args, user, userId, channelId, output);
+          break;
         // Just add any case commands if you want to..
       }
     } catch(ex) {
